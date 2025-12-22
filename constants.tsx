@@ -1,3 +1,4 @@
+
 import { SlideContent, SlideType } from './types';
 import React from 'react';
 import { 
@@ -20,7 +21,8 @@ import {
   Brain,
   Lightbulb,
   Scroll,
-  Feather
+  Feather,
+  Hourglass
 } from 'lucide-react';
 
 export const SLIDES: SlideContent[] = [
@@ -42,7 +44,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Owl with Wi-Fi symbol",
     part: "Part 1"
   },
-  // NEW GRAMMAR
   {
     id: 101,
     type: SlideType.QUIZ,
@@ -68,7 +69,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Three Golden Snitches",
     part: "Part 1"
   },
-  // NEW GRAMMAR
   {
     id: 102,
     type: SlideType.INFO,
@@ -78,6 +78,40 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Ancient Scroll",
     part: "Part 1"
   },
+  
+  // --- TIMELINE 1: Present Perfect Continuous ---
+  {
+    id: 200,
+    type: SlideType.TIMELINE,
+    content: "Present Perfect Continuous",
+    timelineData: {
+        tenseName: "Present Perfect Continuous",
+        description: "Actions starting in the past and continuing until NOW.",
+        markers: [
+            { label: "Past (2010)", position: 10 },
+            { label: "NOW", position: 90 },
+            { label: "Future", position: 100 }
+        ],
+        events: [
+            { label: "Started Using", position: 10, type: 'point', color: 'gold', description: "Action began here" },
+            { label: "have been using...", position: 90, type: 'range', color: 'gold' }
+        ]
+    },
+    visualDescription: "Binary Hourglass",
+    part: "Part 1"
+  },
+  // 10 QUIZZES for Timeline 1
+  { id: 201, type: SlideType.QUIZ, title: "Drill 1/10", content: "I ____ (study) English for 5 years.", options: [{id:'A', text:'have studied'}, {id:'B', text:'have been studying', isCorrect:true}], visualDescription: "Time Turner" },
+  { id: 202, type: SlideType.QUIZ, title: "Drill 2/10", content: "She ____ (wait) here since 2pm.", options: [{id:'A', text:'has been waiting', isCorrect:true}, {id:'B', text:'is waiting'}], visualDescription: "Time Turner" },
+  { id: 203, type: SlideType.QUIZ, title: "Drill 3/10", content: "How long ____ (you / play) this game?", options: [{id:'A', text:'have you been playing', isCorrect:true}, {id:'B', text:'do you play'}], visualDescription: "Time Turner" },
+  { id: 204, type: SlideType.QUIZ, title: "Drill 4/10", content: "We ____ (not / live) here long.", options: [{id:'A', text:'haven\'t been living', isCorrect:true}, {id:'B', text:'didn\'t live'}], visualDescription: "Time Turner" },
+  { id: 205, type: SlideType.QUIZ, title: "Drill 5/10", content: "It ____ (rain) all day.", options: [{id:'A', text:'has been raining', isCorrect:true}, {id:'B', text:'rains'}], visualDescription: "Time Turner" },
+  { id: 206, type: SlideType.QUIZ, title: "Drill 6/10", content: "I'm tired because I ____ (run).", options: [{id:'A', text:'have been running', isCorrect:true}, {id:'B', text:'ran'}], visualDescription: "Time Turner" },
+  { id: 207, type: SlideType.QUIZ, title: "Drill 7/10", content: "____ (you / watch) the show lately?", options: [{id:'A', text:'Have you been watching', isCorrect:true}, {id:'B', text:'Do you watch'}], visualDescription: "Time Turner" },
+  { id: 208, type: SlideType.QUIZ, title: "Drill 8/10", content: "He ____ (work) on this project since March.", options: [{id:'A', text:'has been working', isCorrect:true}, {id:'B', text:'works'}], visualDescription: "Time Turner" },
+  { id: 209, type: SlideType.QUIZ, title: "Drill 9/10", content: "They ____ (travel) around Europe for months.", options: [{id:'A', text:'have been traveling', isCorrect:true}, {id:'B', text:'are traveling'}], visualDescription: "Time Turner" },
+  { id: 210, type: SlideType.QUIZ, title: "Drill 10/10", content: "I ____ (learn) magic since I was 11.", options: [{id:'A', text:'have been learning', isCorrect:true}, {id:'B', text:'learn'}], visualDescription: "Time Turner" },
+
   {
     id: 4,
     type: SlideType.QUIZ,
@@ -90,7 +124,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Binary Hourglass",
     part: "Part 1"
   },
-  // NEW GRAMMAR
   {
     id: 103,
     type: SlideType.QUIZ,
@@ -103,7 +136,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Time Turner",
     part: "Part 1"
   },
-  // NEW TEST
   {
     id: 104,
     type: SlideType.TEST,
@@ -128,7 +160,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Pensieve Mist",
     part: "Part 1"
   },
-  // NEW VOCAB
   {
     id: 105,
     type: SlideType.VOCAB,
@@ -137,7 +168,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Glowing Wand",
     part: "Part 1"
   },
-  // NEW QUIZ
   {
     id: 106,
     type: SlideType.QUIZ,
@@ -191,7 +221,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Moving Portrait",
     part: "Part 1"
   },
-  // NEW VOCAB
   {
     id: 107,
     type: SlideType.VOCAB,
@@ -200,7 +229,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Treasure Chest",
     part: "Part 1"
   },
-  // NEW QUIZ
   {
     id: 108,
     type: SlideType.QUIZ,
@@ -208,7 +236,7 @@ export const SLIDES: SlideContent[] = [
     content: "Which is correct?",
     options: [
       { id: 'A', text: "A young tech-savvy student." },
-      { id: 'B', text: "A tech-savvy young student.", isCorrect: true } // Opinion/Quality before Age
+      { id: 'B', text: "A tech-savvy young student.", isCorrect: true }
     ],
     visualDescription: "Sorting Hat Decision",
     part: "Part 1"
@@ -225,7 +253,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Cauldron Smoke",
     part: "Part 1"
   },
-  // NEW GRAMMAR
   {
     id: 109,
     type: SlideType.QUIZ,
@@ -258,7 +285,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Telescope Constellation",
     part: "Part 1"
   },
-  // NEW VOCAB
   {
     id: 110,
     type: SlideType.VOCAB,
@@ -267,7 +293,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Glowing Wand",
     part: "Part 1"
   },
-  // NEW TEST
   {
     id: 111,
     type: SlideType.TEST,
@@ -335,7 +360,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Remembrall",
     part: "Part 2"
   },
-  // NEW GRAMMAR
   {
     id: 112,
     type: SlideType.INFO,
@@ -345,7 +369,40 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Ancient Scroll",
     part: "Part 2"
   },
-  // NEW TEST
+
+  // --- TIMELINE 2: Past Perfect ---
+  {
+    id: 220,
+    type: SlideType.TIMELINE,
+    content: "The Past Perfect Tense",
+    timelineData: {
+        tenseName: "Past Perfect",
+        description: "An action that happened before another past action.",
+        markers: [
+            { label: "Far Past", position: 10 },
+            { label: "Recent Past", position: 50 },
+            { label: "NOW", position: 90 }
+        ],
+        events: [
+            { label: "Action 1 (First)", position: 10, type: 'point', color: 'gold', description: "had eaten" },
+            { label: "Action 2 (Later)", position: 50, type: 'point', color: 'blue', description: "arrived" }
+        ]
+    },
+    visualDescription: "Time Turner",
+    part: "Part 2"
+  },
+  // 10 QUIZZES for Timeline 2
+  { id: 221, type: SlideType.QUIZ, title: "Drill 1/10", content: "When I arrived, the train ____ (leave).", options: [{id:'A', text:'had left', isCorrect:true}, {id:'B', text:'left'}], visualDescription: "Time Turner" },
+  { id: 222, type: SlideType.QUIZ, title: "Drill 2/10", content: "She was hungry because she ____ (not / eat).", options: [{id:'A', text:'had not eaten', isCorrect:true}, {id:'B', text:'didn\'t eat'}], visualDescription: "Time Turner" },
+  { id: 223, type: SlideType.QUIZ, title: "Drill 3/10", content: "I recognized him because I ____ (meet) him before.", options: [{id:'A', text:'had met', isCorrect:true}, {id:'B', text:'met'}], visualDescription: "Time Turner" },
+  { id: 224, type: SlideType.QUIZ, title: "Drill 4/10", content: "By the time he woke up, the sun ____ (rise).", options: [{id:'A', text:'had risen', isCorrect:true}, {id:'B', text:'rose'}], visualDescription: "Time Turner" },
+  { id: 225, type: SlideType.QUIZ, title: "Drill 5/10", content: "They ____ (finish) the test when the bell rang.", options: [{id:'A', text:'had finished', isCorrect:true}, {id:'B', text:'finish'}], visualDescription: "Time Turner" },
+  { id: 226, type: SlideType.QUIZ, title: "Drill 6/10", content: "She ____ (live) in London before moving to Paris.", options: [{id:'A', text:'had lived', isCorrect:true}, {id:'B', text:'lived'}], visualDescription: "Time Turner" },
+  { id: 227, type: SlideType.QUIZ, title: "Drill 7/10", content: "He ____ (never / see) a dragon before.", options: [{id:'A', text:'had never seen', isCorrect:true}, {id:'B', text:'never saw'}], visualDescription: "Time Turner" },
+  { id: 228, type: SlideType.QUIZ, title: "Drill 8/10", content: "The road was wet because it ____ (rain).", options: [{id:'A', text:'had rained', isCorrect:true}, {id:'B', text:'rained'}], visualDescription: "Time Turner" },
+  { id: 229, type: SlideType.QUIZ, title: "Drill 9/10", content: "I realized I ____ (forget) my wand.", options: [{id:'A', text:'had forgotten', isCorrect:true}, {id:'B', text:'forgot'}], visualDescription: "Time Turner" },
+  { id: 230, type: SlideType.QUIZ, title: "Drill 10/10", content: "After he ____ (do) his homework, he went out.", options: [{id:'A', text:'had done', isCorrect:true}, {id:'B', text:'did'}], visualDescription: "Time Turner" },
+
   {
     id: 113,
     type: SlideType.TEST,
@@ -374,7 +431,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Sorting Hat Speech",
     part: "Part 2"
   },
-  // NEW GRAMMAR
   {
     id: 114,
     type: SlideType.QUIZ,
@@ -395,7 +451,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Ancient Scroll",
     part: "Part 2"
   },
-  // NEW VOCAB
   {
     id: 115,
     type: SlideType.VOCAB,
@@ -404,7 +459,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Treasure Chest",
     part: "Part 2"
   },
-  // NEW TEST
   {
     id: 116,
     type: SlideType.TEST,
@@ -437,7 +491,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Time Turner",
     part: "Part 2"
   },
-  // NEW GRAMMAR
   {
     id: 117,
     type: SlideType.INFO,
@@ -447,7 +500,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Ancient Scroll",
     part: "Part 2"
   },
-  // NEW TEST
   {
     id: 118,
     type: SlideType.TEST,
@@ -484,7 +536,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Golden Arrow",
     part: "Part 2"
   },
-  // NEW VOCAB
   {
     id: 119,
     type: SlideType.VOCAB,
@@ -505,7 +556,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Multiplying Owls",
     part: "Part 2"
   },
-  // NEW VOCAB
   {
     id: 120,
     type: SlideType.VOCAB,
@@ -514,7 +564,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Treasure Chest",
     part: "Part 2"
   },
-  // NEW TEST
   {
     id: 121,
     type: SlideType.TEST,
@@ -551,7 +600,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Glowing Cauldron",
     part: "Part 2"
   },
-  // NEW VOCAB
   {
     id: 122,
     type: SlideType.VOCAB,
@@ -560,7 +608,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Treasure Chest",
     part: "Part 2"
   },
-  // NEW QUIZ
   {
     id: 123,
     type: SlideType.QUIZ,
@@ -600,7 +647,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "CR7 vs Messi Split",
     part: "Part 3"
   },
-  // NEW GRAMMAR
   {
     id: 124,
     type: SlideType.INFO,
@@ -610,7 +656,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Ancient Scroll",
     part: "Part 3"
   },
-  // NEW QUIZ
   {
     id: 125,
     type: SlideType.QUIZ,
@@ -635,7 +680,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Ornate Key Scale",
     part: "Part 3"
   },
-  // NEW VOCAB
   {
     id: 126,
     type: SlideType.VOCAB,
@@ -644,7 +688,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Treasure Chest",
     part: "Part 3"
   },
-  // NEW TEST
   {
     id: 127,
     type: SlideType.TEST,
@@ -665,7 +708,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Spark Line Graph",
     part: "Part 3"
   },
-  // NEW GRAMMAR
   {
     id: 128,
     type: SlideType.QUIZ,
@@ -706,7 +748,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Galleon Bag",
     part: "Part 3"
   },
-  // NEW VOCAB
   {
     id: 129,
     type: SlideType.VOCAB,
@@ -715,7 +756,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Split Mirror",
     part: "Part 3"
   },
-  // NEW QUIZ
   {
     id: 130,
     type: SlideType.QUIZ,
@@ -740,7 +780,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Divination Ball",
     part: "Part 3"
   },
-  // NEW GRAMMAR
   {
     id: 131,
     type: SlideType.INFO,
@@ -750,7 +789,39 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Ancient Scroll",
     part: "Part 3"
   },
-  // NEW TEST
+  
+  // --- TIMELINE 3: Future Perfect ---
+  {
+    id: 240,
+    type: SlideType.TIMELINE,
+    content: "The Future Perfect Tense",
+    timelineData: {
+        tenseName: "Future Perfect",
+        description: "An action that will be finished before a specific time in the future.",
+        markers: [
+            { label: "NOW", position: 10 },
+            { label: "Future", position: 90 }
+        ],
+        events: [
+            { label: "Action Completed", position: 50, type: 'point', color: 'gold', description: "will have finished" },
+            { label: "Deadline", position: 90, type: 'point', color: 'blue', description: "by next year" }
+        ]
+    },
+    visualDescription: "Digital Moon Telescope",
+    part: "Part 3"
+  },
+  // 10 QUIZZES for Timeline 3
+  { id: 241, type: SlideType.QUIZ, title: "Drill 1/10", content: "By 2030, we ____ (solve) this problem.", options: [{id:'A', text:'will have solved', isCorrect:true}, {id:'B', text:'are solving'}], visualDescription: "Digital Moon Telescope" },
+  { id: 242, type: SlideType.QUIZ, title: "Drill 2/10", content: "I ____ (finish) this book by tomorrow.", options: [{id:'A', text:'will have finished', isCorrect:true}, {id:'B', text:'finished'}], visualDescription: "Digital Moon Telescope" },
+  { id: 243, type: SlideType.QUIZ, title: "Drill 3/10", content: "She ____ (leave) by the time you arrive.", options: [{id:'A', text:'will have left', isCorrect:true}, {id:'B', text:'leaves'}], visualDescription: "Digital Moon Telescope" },
+  { id: 244, type: SlideType.QUIZ, title: "Drill 4/10", content: "In two years, they ____ (build) the bridge.", options: [{id:'A', text:'will have built', isCorrect:true}, {id:'B', text:'built'}], visualDescription: "Digital Moon Telescope" },
+  { id: 245, type: SlideType.QUIZ, title: "Drill 5/10", content: "____ (you / complete) the report by 5pm?", options: [{id:'A', text:'Will you have completed', isCorrect:true}, {id:'B', text:'Did you complete'}], visualDescription: "Digital Moon Telescope" },
+  { id: 246, type: SlideType.QUIZ, title: "Drill 6/10", content: "We ____ (not / arrive) before dark.", options: [{id:'A', text:'will not have arrived', isCorrect:true}, {id:'B', text:'didn\'t arrive'}], visualDescription: "Digital Moon Telescope" },
+  { id: 247, type: SlideType.QUIZ, title: "Drill 7/10", content: "By the end of the month, I ____ (save) $500.", options: [{id:'A', text:'will have saved', isCorrect:true}, {id:'B', text:'save'}], visualDescription: "Digital Moon Telescope" },
+  { id: 248, type: SlideType.QUIZ, title: "Drill 8/10", content: "The show ____ (start) by the time we get there.", options: [{id:'A', text:'will have started', isCorrect:true}, {id:'B', text:'starts'}], visualDescription: "Digital Moon Telescope" },
+  { id: 249, type: SlideType.QUIZ, title: "Drill 9/10", content: "He ____ (work) here for 10 years next week.", options: [{id:'A', text:'will have worked', isCorrect:true}, {id:'B', text:'works'}], visualDescription: "Digital Moon Telescope" },
+  { id: 250, type: SlideType.QUIZ, title: "Drill 10/10", content: "By next summer, she ____ (graduate).", options: [{id:'A', text:'will have graduated', isCorrect:true}, {id:'B', text:'is graduating'}], visualDescription: "Digital Moon Telescope" },
+
   {
     id: 132,
     type: SlideType.TEST,
@@ -775,7 +846,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Bridge Diagram",
     part: "Part 3"
   },
-  // NEW VOCAB
   {
     id: 133,
     type: SlideType.VOCAB,
@@ -784,7 +854,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Treasure Chest",
     part: "Part 3"
   },
-  // NEW TEST
   {
     id: 134,
     type: SlideType.TEST,
@@ -817,7 +886,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Volume Meter",
     part: "Part 3"
   },
-  // NEW GRAMMAR
   {
     id: 135,
     type: SlideType.QUIZ,
@@ -858,7 +926,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Lightning Bolt Split",
     part: "Part 3"
   },
-  // NEW VOCAB
   {
     id: 136,
     type: SlideType.VOCAB,
@@ -867,7 +934,6 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Treasure Chest",
     part: "Part 3"
   },
-  // NEW TEST
   {
     id: 137,
     type: SlideType.TEST,

@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { SLIDES, ICONS } from './constants';
 import { SlideType, Mode } from './types';
 import MagicalBackground from './components/MagicalBackground';
+import GrammarTimeline from './components/GrammarTimeline';
 import { GoogleGenAI } from "@google/genai";
 import { 
   ChevronRight, 
@@ -182,13 +184,7 @@ const App: React.FC = () => {
 
         mediaRecorder.onstop = () => {
           const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-          // Optional: Playback
-          // const audioUrl = URL.createObjectURL(audioBlob);
-          // new Audio(audioUrl).play();
-          
           stream.getTracks().forEach(track => track.stop());
-          
-          // Trigger Analysis
           analyzeAudio(audioBlob);
         };
 
@@ -221,6 +217,15 @@ const App: React.FC = () => {
             <p className="text-3xl text-hogwarts-parchment font-hand tracking-widest text-glow-blue">Set 3: Technology and Global Connectivity</p>
           </div>
         );
+
+      case SlideType.TIMELINE:
+          return (
+              <div className="flex flex-col h-full justify-center w-full px-4 items-center">
+                  <ParchmentContainer className="w-full max-w-6xl">
+                      {currentSlide.timelineData && <GrammarTimeline data={currentSlide.timelineData} />}
+                  </ParchmentContainer>
+              </div>
+          );
 
       case SlideType.QUIZ:
         return (
