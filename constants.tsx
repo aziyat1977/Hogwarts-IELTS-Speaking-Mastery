@@ -16,7 +16,11 @@ import {
   TrendingUp, 
   Users, 
   Search, 
-  Star 
+  Star,
+  Brain,
+  Lightbulb,
+  Scroll,
+  Feather
 } from 'lucide-react';
 
 export const SLIDES: SlideContent[] = [
@@ -38,6 +42,19 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Owl with Wi-Fi symbol",
     part: "Part 1"
   },
+  // NEW GRAMMAR
+  {
+    id: 101,
+    type: SlideType.QUIZ,
+    title: "Quiz: Prepositions",
+    content: "Which preposition is correct?",
+    options: [
+      { id: 'A', text: "I found it in the internet." },
+      { id: 'B', text: "I found it on the internet.", isCorrect: true }
+    ],
+    visualDescription: "Sorting Hat Decision",
+    part: "Part 1"
+  },
   {
     id: 3,
     type: SlideType.QUIZ,
@@ -51,6 +68,16 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Three Golden Snitches",
     part: "Part 1"
   },
+  // NEW GRAMMAR
+  {
+    id: 102,
+    type: SlideType.INFO,
+    title: "Grammar Insight",
+    content: "Stative verbs (like 'prefer', 'need', 'love') are rarely used in continuous forms.",
+    insight: "Say 'I prefer emailing' not 'I am preferring'.",
+    visualDescription: "Ancient Scroll",
+    part: "Part 1"
+  },
   {
     id: 4,
     type: SlideType.QUIZ,
@@ -61,6 +88,28 @@ export const SLIDES: SlideContent[] = [
       { id: 'B', text: "I have been using the internet...", isCorrect: true }
     ],
     visualDescription: "Binary Hourglass",
+    part: "Part 1"
+  },
+  // NEW GRAMMAR
+  {
+    id: 103,
+    type: SlideType.QUIZ,
+    title: "Quiz: 'Used to'",
+    content: "Select the correct structure for a past habit that has stopped:",
+    options: [
+      { id: 'A', text: "I am used to using Skype." },
+      { id: 'B', text: "I used to use Skype.", isCorrect: true }
+    ],
+    visualDescription: "Time Turner",
+    part: "Part 1"
+  },
+  // NEW TEST
+  {
+    id: 104,
+    type: SlideType.TEST,
+    title: "Grammar Challenge",
+    content: "Use 'get used to' in a sentence about a new app.",
+    visualDescription: "Marauder's Map Quill",
     part: "Part 1"
   },
   {
@@ -77,6 +126,28 @@ export const SLIDES: SlideContent[] = [
     title: "Model Answer Start",
     content: "To be honest, I rely on the internet almost constantly to stay in touch with my friends overseas...",
     visualDescription: "Pensieve Mist",
+    part: "Part 1"
+  },
+  // NEW VOCAB
+  {
+    id: 105,
+    type: SlideType.VOCAB,
+    title: "Magic Vocab",
+    content: "\"Indispensable\" (adj.) - Absolutely necessary.",
+    visualDescription: "Glowing Wand",
+    part: "Part 1"
+  },
+  // NEW QUIZ
+  {
+    id: 106,
+    type: SlideType.QUIZ,
+    title: "Quiz: Vocab Context",
+    content: "Is 'indispensable' stronger than 'useful'?",
+    options: [
+      { id: 'A', text: "Yes, much stronger.", isCorrect: true },
+      { id: 'B', text: "No, they are the same." }
+    ],
+    visualDescription: "Ornate Key Scale",
     part: "Part 1"
   },
   {
@@ -120,6 +191,28 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Moving Portrait",
     part: "Part 1"
   },
+  // NEW VOCAB
+  {
+    id: 107,
+    type: SlideType.VOCAB,
+    title: "Power Vocab",
+    content: "\"Tech-savvy\" (adj.) - Proficient with modern technology.",
+    visualDescription: "Treasure Chest",
+    part: "Part 1"
+  },
+  // NEW QUIZ
+  {
+    id: 108,
+    type: SlideType.QUIZ,
+    title: "Quiz: Adjective Order",
+    content: "Which is correct?",
+    options: [
+      { id: 'A', text: "A young tech-savvy student." },
+      { id: 'B', text: "A tech-savvy young student.", isCorrect: true } // Opinion/Quality before Age
+    ],
+    visualDescription: "Sorting Hat Decision",
+    part: "Part 1"
+  },
   {
     id: 11,
     type: SlideType.QUIZ,
@@ -130,6 +223,19 @@ export const SLIDES: SlideContent[] = [
       { id: 'B', text: "...to talking..." }
     ],
     visualDescription: "Cauldron Smoke",
+    part: "Part 1"
+  },
+  // NEW GRAMMAR
+  {
+    id: 109,
+    type: SlideType.QUIZ,
+    title: "Quiz: Adverbs of Frequency",
+    content: "Where do we usually place 'hardly ever'?",
+    options: [
+      { id: 'A', text: "Before the main verb (I hardly ever use...)", isCorrect: true },
+      { id: 'B', text: "After the object (I use Skype hardly ever)" }
+    ],
+    visualDescription: "Golden Arrow",
     part: "Part 1"
   },
   {
@@ -150,6 +256,24 @@ export const SLIDES: SlideContent[] = [
     title: "Quick Test",
     content: "Use \"instantaneous\" in a sentence about messaging.",
     visualDescription: "Telescope Constellation",
+    part: "Part 1"
+  },
+  // NEW VOCAB
+  {
+    id: 110,
+    type: SlideType.VOCAB,
+    title: "Magic Vocab",
+    content: "\"Glitch\" (n.) - A sudden, usually temporary malfunction.",
+    visualDescription: "Glowing Wand",
+    part: "Part 1"
+  },
+  // NEW TEST
+  {
+    id: 111,
+    type: SlideType.TEST,
+    title: "Vocab Application",
+    content: "Describe a time your computer had a 'glitch' versus a 'crash'.",
+    visualDescription: "Gargoyle Masks",
     part: "Part 1"
   },
   {
@@ -211,6 +335,25 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Remembrall",
     part: "Part 2"
   },
+  // NEW GRAMMAR
+  {
+    id: 112,
+    type: SlideType.INFO,
+    title: "Grammar Insight",
+    content: "Use Past Perfect to describe what happened *before* the main event.",
+    insight: "\"I had never heard of this issue until I saw the article...\"",
+    visualDescription: "Ancient Scroll",
+    part: "Part 2"
+  },
+  // NEW TEST
+  {
+    id: 113,
+    type: SlideType.TEST,
+    title: "Grammar Challenge",
+    content: "Create a sentence starting: \"By the time I read the news...\"",
+    visualDescription: "Marauder's Map Quill",
+    part: "Part 2"
+  },
   {
     id: 20,
     type: SlideType.QUIZ,
@@ -231,12 +374,43 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Sorting Hat Speech",
     part: "Part 2"
   },
+  // NEW GRAMMAR
+  {
+    id: 114,
+    type: SlideType.QUIZ,
+    title: "Quiz: Cleft Sentences",
+    content: "Which structure adds more emphasis?",
+    options: [
+      { id: 'A', text: "The scale of the problem surprised me." },
+      { id: 'B', text: "What surprised me was the scale of the problem.", isCorrect: true }
+    ],
+    visualDescription: "Glowing Wand",
+    part: "Part 2"
+  },
   {
     id: 22,
     type: SlideType.INFO,
     title: "Model Answer",
     content: "I’d like to talk about a story I followed regarding the global shift to renewable energy, which has far-reaching consequences...",
     visualDescription: "Ancient Scroll",
+    part: "Part 2"
+  },
+  // NEW VOCAB
+  {
+    id: 115,
+    type: SlideType.VOCAB,
+    title: "Power Vocab",
+    content: "\"Credible Source\" (n.) - A trustworthy origin of information.",
+    visualDescription: "Treasure Chest",
+    part: "Part 2"
+  },
+  // NEW TEST
+  {
+    id: 116,
+    type: SlideType.TEST,
+    title: "Vocab Application",
+    content: "Why is it important to \"verify your sources\"?",
+    visualDescription: "Master's Medal",
     part: "Part 2"
   },
   {
@@ -261,6 +435,25 @@ export const SLIDES: SlideContent[] = [
       { id: 'B', text: "was reading", isCorrect: true }
     ],
     visualDescription: "Time Turner",
+    part: "Part 2"
+  },
+  // NEW GRAMMAR
+  {
+    id: 117,
+    type: SlideType.INFO,
+    title: "Grammar Insight",
+    content: "News is often reported using the Passive Voice.",
+    insight: "\"It was announced that...\" sounds more formal than \"They announced that...\"",
+    visualDescription: "Ancient Scroll",
+    part: "Part 2"
+  },
+  // NEW TEST
+  {
+    id: 118,
+    type: SlideType.TEST,
+    title: "Grammar Challenge",
+    content: "Change to Passive: \"The government passed a new law.\"",
+    visualDescription: "Marauder's Map Quill",
     part: "Part 2"
   },
   {
@@ -291,6 +484,15 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Golden Arrow",
     part: "Part 2"
   },
+  // NEW VOCAB
+  {
+    id: 119,
+    type: SlideType.VOCAB,
+    title: "Magic Vocab",
+    content: "\"Sensationalism\" (n.) - Use of exciting language at the expense of accuracy.",
+    visualDescription: "Glowing Cauldron",
+    part: "Part 2"
+  },
   {
     id: 28,
     type: SlideType.QUIZ,
@@ -301,6 +503,24 @@ export const SLIDES: SlideContent[] = [
       { id: 'B', text: "To be deleted" }
     ],
     visualDescription: "Multiplying Owls",
+    part: "Part 2"
+  },
+  // NEW VOCAB
+  {
+    id: 120,
+    type: SlideType.VOCAB,
+    title: "Power Vocab",
+    content: "\"Watershed moment\" (Idiom) - A turning point.",
+    visualDescription: "Treasure Chest",
+    part: "Part 2"
+  },
+  // NEW TEST
+  {
+    id: 121,
+    type: SlideType.TEST,
+    title: "Vocab Application",
+    content: "Describe a 'watershed moment' in technology history.",
+    visualDescription: "Master's Medal",
     part: "Part 2"
   },
   {
@@ -331,6 +551,28 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Glowing Cauldron",
     part: "Part 2"
   },
+  // NEW VOCAB
+  {
+    id: 122,
+    type: SlideType.VOCAB,
+    title: "Power Vocab",
+    content: "\"Unprecedented\" (adj.) - Never done or known before.",
+    visualDescription: "Treasure Chest",
+    part: "Part 2"
+  },
+  // NEW QUIZ
+  {
+    id: 123,
+    type: SlideType.QUIZ,
+    title: "Quiz: Syllable Stress",
+    content: "Where is the stress in 'un-pre-ce-den-ted'?",
+    options: [
+      { id: 'A', text: "2nd syllable (pre)", isCorrect: true },
+      { id: 'B', text: "3rd syllable (ce)" }
+    ],
+    visualDescription: "Sound Wave Spell",
+    part: "Part 2"
+  },
   {
     id: 32,
     type: SlideType.TEST,
@@ -358,6 +600,29 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "CR7 vs Messi Split",
     part: "Part 3"
   },
+  // NEW GRAMMAR
+  {
+    id: 124,
+    type: SlideType.INFO,
+    title: "Grammar Insight",
+    content: "Use 2nd Conditional for hypothetical situations.",
+    insight: "\"If the internet were less unregulated, we might see...\"",
+    visualDescription: "Ancient Scroll",
+    part: "Part 3"
+  },
+  // NEW QUIZ
+  {
+    id: 125,
+    type: SlideType.QUIZ,
+    title: "Quiz: Conditional Grammar",
+    content: "Complete: \"If social media ____ existed...\"",
+    options: [
+      { id: 'A', text: "had not", isCorrect: true },
+      { id: 'B', text: "has not" }
+    ],
+    visualDescription: "Time Turner",
+    part: "Part 3"
+  },
   {
     id: 35,
     type: SlideType.QUIZ,
@@ -370,6 +635,24 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Ornate Key Scale",
     part: "Part 3"
   },
+  // NEW VOCAB
+  {
+    id: 126,
+    type: SlideType.VOCAB,
+    title: "Power Vocab",
+    content: "\"Ubiquitous\" (adj.) - Present, appearing, or found everywhere.",
+    visualDescription: "Treasure Chest",
+    part: "Part 3"
+  },
+  // NEW TEST
+  {
+    id: 127,
+    type: SlideType.TEST,
+    title: "Vocab Application",
+    content: "Name three things that have become 'ubiquitous' in the last decade.",
+    visualDescription: "Master's Medal",
+    part: "Part 3"
+  },
   {
     id: 36,
     type: SlideType.QUIZ,
@@ -380,6 +663,19 @@ export const SLIDES: SlideContent[] = [
       { id: 'B', text: "There has been a significant shift towards...", isCorrect: true }
     ],
     visualDescription: "Spark Line Graph",
+    part: "Part 3"
+  },
+  // NEW GRAMMAR
+  {
+    id: 128,
+    type: SlideType.QUIZ,
+    title: "Quiz: Linking Words",
+    content: "Which word introduces a contrast?",
+    options: [
+      { id: 'A', text: "Furthermore" },
+      { id: 'B', text: "Conversely", isCorrect: true }
+    ],
+    visualDescription: "Two Sided Mirror",
     part: "Part 3"
   },
   {
@@ -410,6 +706,28 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Galleon Bag",
     part: "Part 3"
   },
+  // NEW VOCAB
+  {
+    id: 129,
+    type: SlideType.VOCAB,
+    title: "Magic Vocab",
+    content: "\"Digital Divide\" (n.) - The gap between those who have access to computers/internet and those who do not.",
+    visualDescription: "Split Mirror",
+    part: "Part 3"
+  },
+  // NEW QUIZ
+  {
+    id: 130,
+    type: SlideType.QUIZ,
+    title: "Quiz: Concept",
+    content: "Does the digital divide increase or decrease inequality?",
+    options: [
+      { id: 'A', text: "Increases inequality", isCorrect: true },
+      { id: 'B', text: "Decreases inequality" }
+    ],
+    visualDescription: "Uneven Scale",
+    part: "Part 3"
+  },
   {
     id: 40,
     type: SlideType.QUIZ,
@@ -420,6 +738,25 @@ export const SLIDES: SlideContent[] = [
       { id: 'B', text: "It is highly probable that...", isCorrect: true }
     ],
     visualDescription: "Divination Ball",
+    part: "Part 3"
+  },
+  // NEW GRAMMAR
+  {
+    id: 131,
+    type: SlideType.INFO,
+    title: "Grammar Insight",
+    content: "Use Future Perfect to look back from the future.",
+    insight: "\"By 2050, AI will have transformed education...\"",
+    visualDescription: "Ancient Scroll",
+    part: "Part 3"
+  },
+  // NEW TEST
+  {
+    id: 132,
+    type: SlideType.TEST,
+    title: "Grammar Challenge",
+    content: "Predict a change by 2040 using \"will have + past participle\".",
+    visualDescription: "Digital Moon Telescope",
     part: "Part 3"
   },
   {
@@ -436,6 +773,24 @@ export const SLIDES: SlideContent[] = [
     title: "Pauline's Insight",
     content: "In Part 3, using a world-famous rivalry like CR7 vs Messi helps you explain the abstract concept of \"Digital Tribes\" clearly.",
     visualDescription: "Bridge Diagram",
+    part: "Part 3"
+  },
+  // NEW VOCAB
+  {
+    id: 133,
+    type: SlideType.VOCAB,
+    title: "Power Vocab",
+    content: "\"Confirmation Bias\" (n.) - Searching for info that supports your existing beliefs.",
+    visualDescription: "Treasure Chest",
+    part: "Part 3"
+  },
+  // NEW TEST
+  {
+    id: 134,
+    type: SlideType.TEST,
+    title: "Concept Check",
+    content: "Explain the difference between 'Confirmation Bias' and 'Fake News'.",
+    visualDescription: "Master's Medal",
     part: "Part 3"
   },
   {
@@ -460,6 +815,19 @@ export const SLIDES: SlideContent[] = [
       { id: 'B', text: "more THAN others." }
     ],
     visualDescription: "Volume Meter",
+    part: "Part 3"
+  },
+  // NEW GRAMMAR
+  {
+    id: 135,
+    type: SlideType.QUIZ,
+    title: "Quiz: Modals of Deduction",
+    content: "If you are 100% sure something is true, use:",
+    options: [
+      { id: 'A', text: "It must be..." , isCorrect: true },
+      { id: 'B', text: "It could be..." }
+    ],
+    visualDescription: "Glowing Wand",
     part: "Part 3"
   },
   {
@@ -490,6 +858,24 @@ export const SLIDES: SlideContent[] = [
     visualDescription: "Lightning Bolt Split",
     part: "Part 3"
   },
+  // NEW VOCAB
+  {
+    id: 136,
+    type: SlideType.VOCAB,
+    title: "Power Vocab",
+    content: "\"Disseminate\" (v.) - To spread widely (especially information).",
+    visualDescription: "Treasure Chest",
+    part: "Part 3"
+  },
+  // NEW TEST
+  {
+    id: 137,
+    type: SlideType.TEST,
+    title: "Vocab Application",
+    content: "Use 'disseminate' in a sentence about fake news.",
+    visualDescription: "Master's Medal",
+    part: "Part 3"
+  },
   {
     id: 48,
     type: SlideType.TEST,
@@ -511,6 +897,11 @@ export const SLIDES: SlideContent[] = [
         { id: '3', text: "Double-edged sword (idiom): Has pros and cons." },
         { id: '4', text: "Digital nomad (n): Remote worker traveling." },
         { id: '5', text: "Disseminate (v): To spread information." },
+        { id: '6', text: "Algorithmic bias (n): Unfairness in computer systems." },
+        { id: '7', text: "Ephemeral (adj): Lasting a short time (e.g., Stories)." },
+        { id: '8', text: "Gamification (n): Using game design in non-games." },
+        { id: '9', text: "Inadvertently (adv): Accidentally/Without intention." },
+        { id: '10', text: "Scrutinize (v): To examine closely." },
     ]
   }
 ];
@@ -536,7 +927,7 @@ export const ICONS: Record<string, React.FC<any>> = {
   "Remembrall": Star,
   "Stopped Hourglass": Clock,
   "Sorting Hat Speech": MessageCircle,
-  "Ancient Scroll": BookOpen,
+  "Ancient Scroll": Scroll,
   "Glowing Wand": Zap,
   "Time Turner": Clock,
   "Digital Footprints": Users,
@@ -563,5 +954,6 @@ export const ICONS: Record<string, React.FC<any>> = {
   "Mirror Room": Users,
   "Lightning Bolt Split": Zap,
   "Final Crest": Award,
-  "Treasure Chest": Award
+  "Treasure Chest": Award,
+  "Hogwarts Express Header": Star
 };
