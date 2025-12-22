@@ -1,0 +1,7 @@
+{
+  "name": "Hogwarts IELTS Speaking Mastery",
+  "description": "A fully animated, gamified Hogwarts-themed application for IELTS Speaking preparation, focusing on Technology and Global Connectivity.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
