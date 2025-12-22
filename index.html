@@ -21,7 +21,10 @@
                 parchment: '#f0e6d2',
                 parchmentDark: '#dcd0b3',
                 ink: '#2c1810',
-                wood: '#3e2723'
+                wood: '#3e2723',
+                lightBg: '#f8f5e6', 
+                stoneLight: '#e6dfd0',
+                stoneDark: '#1c1c1c'
               }
             },
             fontFamily: {
@@ -34,13 +37,17 @@
             },
             boxShadow: {
               'magical': '0 0 20px 5px rgba(255, 197, 0, 0.2)',
+              'magical-dark': '0 0 30px 10px rgba(0, 0, 0, 0.5)',
               'inner-parchment': 'inset 0 0 60px rgba(139, 69, 19, 0.15)',
+              'glow-gold': '0 0 15px rgba(255, 197, 0, 0.6)',
+              'glow-ink': '0 0 15px rgba(44, 24, 16, 0.3)',
             },
             animation: {
               'float': 'float 6s ease-in-out infinite',
               'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
               'sparkle': 'sparkle 2s linear infinite',
               'flicker': 'flicker 3s linear infinite',
+              'spin-slow': 'spin 8s linear infinite',
             },
             keyframes: {
               float: {
@@ -62,21 +69,35 @@
       }
     </script>
     <style>
+      /* Global Reset & Base */
       body {
         font-family: 'Crimson Text', serif;
         overflow: hidden; 
-        background-color: #050505;
+        transition: background-color 1s ease, color 1s ease;
+        /* Magical Cursor - Simple SVG fallback */
+        cursor: crosshair;
       }
       
+      ::selection {
+        background: #ffc500;
+        color: #0a0e17;
+      }
+
       .text-glow {
         text-shadow: 0 0 10px rgba(255, 197, 0, 0.5);
+      }
+      .dark .text-glow {
+        text-shadow: 0 0 10px rgba(255, 197, 0, 0.5);
+      }
+      .text-glow-ink {
+        text-shadow: 0 0 5px rgba(44, 24, 16, 0.3);
       }
 
       .text-glow-blue {
         text-shadow: 0 0 10px rgba(100, 200, 255, 0.6);
       }
 
-      /* Custom Scrollbar for parchment areas */
+      /* Custom Scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -104,7 +125,7 @@
 }
 </script>
 </head>
-  <body class="bg-hogwarts-navy text-hogwarts-parchment">
+  <body class="bg-hogwarts-lightBg text-hogwarts-ink dark:bg-hogwarts-navy dark:text-hogwarts-parchment transition-colors duration-1000">
     <div id="root"></div>
   </body>
 </html>

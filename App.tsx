@@ -4,6 +4,7 @@ import { SLIDES, ICONS } from './constants';
 import { SlideType, Mode } from './types';
 import MagicalBackground from './components/MagicalBackground';
 import GrammarTimeline from './components/GrammarTimeline';
+import { playSound } from './utils/audio';
 import { GoogleGenAI } from "@google/genai";
 import { 
   ChevronRight, 
@@ -20,19 +21,25 @@ import {
   Scroll,
   Feather,
   Loader2,
-  Wand2
+  Wand2,
+  Diamond
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
+// Refined Parchment Container to look good in both modes and screens
 const ParchmentContainer = ({ children, className = "" }: { children?: React.ReactNode, className?: string }) => (
-  <div className={`relative w-full max-w-4xl mx-auto p-8 md:p-12 bg-hogwarts-parchment text-hogwarts-ink shadow-[0_0_50px_rgba(0,0,0,0.5)] border-[12px] border-double border-hogwarts-wood rounded-lg bg-parchment-pattern shadow-inner-parchment ${className}`}>
-    <div className="absolute top-0 left-0 w-full h-full pointer-events-none border border-hogwarts-gold/30 rounded-lg m-1"></div>
+  <div className={`relative w-full max-w-4xl mx-auto p-6 md:p-12 
+    bg-hogwarts-parchment text-hogwarts-ink 
+    shadow-[0_0_50px_rgba(0,0,0,0.2)] dark:shadow-[0_0_50px_rgba(0,0,0,0.8)]
+    border-[8px] md:border-[12px] border-double border-hogwarts-wood 
+    rounded-sm bg-parchment-pattern shadow-inner-parchment transition-transform duration-500 ${className}`}>
+    <div className="absolute top-0 left-0 w-full h-full pointer-events-none border border-hogwarts-gold/30 rounded-sm m-1"></div>
     {children}
     {/* Decorative corner flourishes */}
-    <div className="absolute top-2 left-2 text-hogwarts-gold opacity-50"><Sparkles size={16} /></div>
-    <div className="absolute top-2 right-2 text-hogwarts-gold opacity-50"><Sparkles size={16} /></div>
-    <div className="absolute bottom-2 left-2 text-hogwarts-gold opacity-50"><Sparkles size={16} /></div>
-    <div className="absolute bottom-2 right-2 text-hogwarts-gold opacity-50"><Sparkles size={16} /></div>
+    <div className="absolute top-2 left-2 text-hogwarts-wood/40 dark:text-hogwarts-gold/40"><Sparkles size={16} /></div>
+    <div className="absolute top-2 right-2 text-hogwarts-wood/40 dark:text-hogwarts-gold/40"><Sparkles size={16} /></div>
+    <div className="absolute bottom-2 left-2 text-hogwarts-wood/40 dark:text-hogwarts-gold/40"><Sparkles size={16} /></div>
+    <div className="absolute bottom-2 right-2 text-hogwarts-wood/40 dark:text-hogwarts-gold/40"><Sparkles size={16} /></div>
   </div>
 );
 
@@ -54,6 +61,16 @@ const App: React.FC = () => {
   const currentSlide = SLIDES[currentSlideIndex];
   const IconComponent = currentSlide.visualDescription ? ICONS[currentSlide.visualDescription] : Sparkles;
 
+  // Toggle Dark Mode Class on Body
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    playSound('click');
+  }, [isDarkMode]);
+
   // Key navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -74,12 +91,14 @@ const App: React.FC = () => {
   const nextSlide = () => {
     if (currentSlideIndex < SLIDES.length - 1) {
       setCurrentSlideIndex(prev => prev + 1);
+      playSound('nav');
     }
   };
 
   const prevSlide = () => {
     if (currentSlideIndex > 0) {
       setCurrentSlideIndex(prev => prev - 1);
+      playSound('nav');
     }
   };
 
@@ -91,6 +110,9 @@ const App: React.FC = () => {
       setShowResult(prev => ({ ...prev, [currentSlide.id]: true }));
       if (isCorrect) {
         setScore(prev => prev + 10);
+        playSound('correct');
+      } else {
+        playSound('wrong');
       }
     }
   };
@@ -102,6 +124,7 @@ const App: React.FC = () => {
       setShowResult({});
       setScore(0);
       setFeedback(null);
+      playSound('spell');
     }
   };
 
@@ -109,6 +132,7 @@ const App: React.FC = () => {
     const modes = [Mode.STUDENT, Mode.TEACHER, Mode.KAHOOT, Mode.PRACTICE];
     const nextIndex = (modes.indexOf(mode) + 1) % modes.length;
     setMode(modes[nextIndex]);
+    playSound('spell');
   };
 
   const blobToBase64 = (blob: Blob): Promise<string> => {
@@ -129,7 +153,6 @@ const App: React.FC = () => {
 
     try {
       const base64Audio = await blobToBase64(audioBlob);
-      // Using the native audio model as per instructions for audio capabilities
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-native-audio-preview-09-2025',
@@ -154,9 +177,11 @@ const App: React.FC = () => {
       });
       
       setFeedback(response.text || "The owl lost your message. Please try again.");
+      playSound('correct');
     } catch (error) {
       console.error("Gemini analysis error:", error);
       setFeedback("Communication with the Ministry of Magic failed. (API Error)");
+      playSound('wrong');
     } finally {
       setIsAnalyzing(false);
     }
@@ -167,6 +192,7 @@ const App: React.FC = () => {
       if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
         mediaRecorderRef.current.stop();
         setIsRecording(false);
+        playSound('click');
       }
     } else {
       setFeedback(null);
@@ -190,9 +216,11 @@ const App: React.FC = () => {
 
         mediaRecorder.start();
         setIsRecording(true);
+        playSound('spell');
       } catch (err) {
         console.error("Error accessing microphone:", err);
         alert("Could not access microphone.");
+        playSound('wrong');
       }
     }
   };
@@ -207,52 +235,51 @@ const App: React.FC = () => {
     switch (currentSlide.type) {
       case SlideType.PART_HEADER:
         return (
-          <div className="flex flex-col items-center justify-center h-full text-center p-8 animate-float">
+          <div className="flex flex-col items-center justify-center h-full text-center p-4 md:p-8 animate-float">
             <div className="relative">
               <div className="absolute inset-0 bg-hogwarts-gold blur-[60px] opacity-20 rounded-full"></div>
-              {IconComponent && <IconComponent size={140} className="text-hogwarts-gold relative z-10 drop-shadow-[0_0_25px_rgba(255,197,0,0.8)]" />}
+              {IconComponent && <IconComponent size={120} className="text-hogwarts-ink dark:text-hogwarts-gold relative z-10 drop-shadow-[0_0_25px_rgba(255,197,0,0.8)] transition-colors" />}
             </div>
-            <h1 className="text-7xl font-harry text-hogwarts-gold mt-10 mb-6 text-glow tracking-wide">{currentSlide.content}</h1>
-            <div className="h-1 w-32 bg-gradient-to-r from-transparent via-hogwarts-gold to-transparent mb-4"></div>
-            <p className="text-3xl text-hogwarts-parchment font-hand tracking-widest text-glow-blue">Set 3: Technology and Global Connectivity</p>
+            <h1 className="text-4xl md:text-7xl font-harry text-hogwarts-ink dark:text-hogwarts-gold mt-6 md:mt-10 mb-4 md:mb-6 text-glow-ink dark:text-glow tracking-wide transition-colors leading-tight">{currentSlide.content}</h1>
+            <div className="h-1 w-24 md:w-32 bg-gradient-to-r from-transparent via-hogwarts-crimson dark:via-hogwarts-gold to-transparent mb-4"></div>
+            <p className="text-xl md:text-3xl text-hogwarts-wood dark:text-hogwarts-parchment font-hand tracking-widest text-glow-blue transition-colors">Set 3: Technology and Global Connectivity</p>
           </div>
         );
 
       case SlideType.TIMELINE:
           return (
-              <div className="flex flex-col h-full justify-center w-full px-4 items-center">
-                  <ParchmentContainer className="w-full max-w-6xl">
+              <div className="flex flex-col h-full justify-center w-full px-4 items-center overflow-y-auto">
+                  <div className="w-full max-w-6xl py-4">
                       {currentSlide.timelineData && <GrammarTimeline data={currentSlide.timelineData} />}
-                  </ParchmentContainer>
+                  </div>
               </div>
           );
 
       case SlideType.QUIZ:
         return (
-          <div className="flex flex-col h-full justify-center w-full px-4">
+          <div className="flex flex-col h-full justify-center w-full px-2 md:px-4">
              <div className="max-w-4xl mx-auto w-full relative z-10">
                 <ParchmentContainer>
-                  <div className="flex items-center justify-between mb-6 border-b-2 border-hogwarts-ink/20 pb-4">
-                     <h2 className="text-3xl font-harry text-hogwarts-wood flex items-center gap-3">
+                  <div className="flex items-center justify-between mb-4 md:mb-6 border-b-2 border-hogwarts-ink/20 pb-4">
+                     <h2 className="text-2xl md:text-3xl font-harry text-hogwarts-wood flex items-center gap-3">
                        <Feather className="text-hogwarts-crimson" />
                        {currentSlide.title}
                      </h2>
-                     {isKahoot && <div className="text-hogwarts-crimson font-bold text-3xl font-harry animate-pulse">00:30</div>}
+                     {isKahoot && <div className="text-hogwarts-crimson font-bold text-2xl md:text-3xl font-harry animate-pulse">00:30</div>}
                   </div>
                   
-                  <p className="text-3xl mb-10 leading-relaxed font-body font-semibold">{currentSlide.content}</p>
+                  <p className="text-2xl md:text-3xl mb-6 md:mb-10 leading-relaxed font-body font-semibold">{currentSlide.content}</p>
                   
-                  <div className={`grid ${currentSlide.options && currentSlide.options.length > 2 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-6`}>
+                  <div className={`grid ${currentSlide.options && currentSlide.options.length > 2 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-4 md:gap-6`}>
                     {currentSlide.options?.map((opt, idx) => {
-                      let btnClass = "relative p-5 rounded-lg border-2 text-left text-xl font-body transition-all duration-300 transform hover:scale-[1.02] shadow-md ";
+                      let btnClass = "relative p-4 md:p-5 rounded-sm border-2 text-left text-lg md:text-xl font-body transition-all duration-300 transform group ";
                       
-                      // Magical aesthetic for buttons
                       if (isKahoot) {
                          const colors = ['bg-red-700 border-red-900', 'bg-blue-700 border-blue-900', 'bg-yellow-600 border-yellow-800', 'bg-green-700 border-green-900'];
                          btnClass += `${colors[idx % 4]} text-white`;
                       } else {
-                         // Parchment/Wood style buttons
-                         btnClass += "bg-hogwarts-wood/10 border-hogwarts-wood/40 hover:bg-hogwarts-wood/20 hover:border-hogwarts-gold text-hogwarts-ink";
+                         // Hogwarts Legacy Style Button
+                         btnClass += "bg-white/40 border-hogwarts-wood/40 hover:bg-white/60 hover:border-hogwarts-gold text-hogwarts-ink hover:scale-[1.02] hover:shadow-glow-gold";
                       }
 
                       if (revealed) {
@@ -265,15 +292,20 @@ const App: React.FC = () => {
                         <button 
                           key={opt.id}
                           onClick={() => handleOptionClick(opt.id, opt.isCorrect)}
+                          onMouseEnter={() => playSound('hover')}
                           className={btnClass}
                           disabled={!!answered && !isTeacher}
                         >
                           <div className="flex items-center">
-                            <span className={`w-10 h-10 rounded-full flex items-center justify-center mr-4 border-2 ${isKahoot ? 'border-white/50 bg-black/20' : 'border-hogwarts-wood/50 bg-hogwarts-parchment text-hogwarts-wood'} font-harry font-bold`}>
-                              {opt.id}
+                            <span className={`w-8 h-8 md:w-10 md:h-10 rotate-45 group-hover:rotate-0 transition-transform duration-300 flex items-center justify-center mr-4 border-2 ${isKahoot ? 'border-white/50 bg-black/20' : 'border-hogwarts-wood/50 bg-hogwarts-parchment text-hogwarts-wood'} font-harry font-bold text-sm md:text-base`}>
+                              <span className="group-hover:rotate-0 -rotate-45 transition-transform duration-300">{opt.id}</span>
                             </span>
                             <span className="font-semibold">{opt.text}</span>
                           </div>
+                          {/* Corner details for UI feel */}
+                          <div className="absolute top-1 left-1 w-1 h-1 bg-current opacity-30"></div>
+                          <div className="absolute bottom-1 right-1 w-1 h-1 bg-current opacity-30"></div>
+                          
                           {revealed && opt.isCorrect && (
                             <Sparkles className="absolute -top-3 -right-3 text-hogwarts-gold animate-sparkle w-8 h-8 fill-current" />
                           )}
@@ -296,29 +328,29 @@ const App: React.FC = () => {
              <ParchmentContainer className="flex flex-col items-center">
                  <div className="mb-6 p-4 rounded-full border-4 border-hogwarts-gold/50 bg-hogwarts-navy shadow-lg relative">
                     <div className="absolute inset-0 bg-hogwarts-gold opacity-10 rounded-full animate-pulse-slow"></div>
-                    {IconComponent && <IconComponent size={54} className="text-hogwarts-gold" />}
+                    {IconComponent && <IconComponent size={40} className="text-hogwarts-gold md:w-14 md:h-14" />}
                  </div>
                  
-                 <h2 className="text-lg font-harry uppercase tracking-[0.2em] text-hogwarts-crimson mb-4 border-b border-hogwarts-crimson/30 pb-1">
+                 <h2 className="text-sm md:text-lg font-harry uppercase tracking-[0.2em] text-hogwarts-crimson mb-4 border-b border-hogwarts-crimson/30 pb-1">
                    {currentSlide.type === SlideType.REASON ? "Pauline's Insight" : currentSlide.title || currentSlide.type}
                  </h2>
 
-                 <h1 className="text-4xl md:text-5xl font-harry mb-8 leading-tight text-hogwarts-ink drop-shadow-sm">
+                 <h1 className="text-3xl md:text-5xl font-harry mb-6 md:mb-8 leading-tight text-hogwarts-ink drop-shadow-sm">
                    {currentSlide.content}
                  </h1>
 
                  {(currentSlide.uzbek || currentSlide.russian) && (
-                   <div className="space-y-4 mt-6 bg-hogwarts-wood/5 p-6 rounded-lg border border-hogwarts-wood/20 w-full max-w-2xl">
+                   <div className="space-y-4 mt-6 bg-hogwarts-wood/5 p-4 md:p-6 rounded-lg border border-hogwarts-wood/20 w-full max-w-2xl">
                      {currentSlide.uzbek && (
                        <div className="flex items-start gap-4 text-left">
                          <span className="text-xs font-bold text-hogwarts-wood/60 mt-1.5 font-sans">UZ</span>
-                         <p className="text-xl font-hand text-hogwarts-wood font-bold">"{currentSlide.uzbek}"</p>
+                         <p className="text-lg md:text-xl font-hand text-hogwarts-wood font-bold">"{currentSlide.uzbek}"</p>
                        </div>
                      )}
                      {currentSlide.russian && (
                        <div className="flex items-start gap-4 text-left">
                          <span className="text-xs font-bold text-hogwarts-wood/60 mt-1.5 font-sans">RU</span>
-                         <p className="text-xl font-hand text-hogwarts-wood font-bold">"{currentSlide.russian}"</p>
+                         <p className="text-lg md:text-xl font-hand text-hogwarts-wood font-bold">"{currentSlide.russian}"</p>
                        </div>
                      )}
                    </div>
@@ -327,20 +359,20 @@ const App: React.FC = () => {
                  {currentSlide.insight && (mode === Mode.TEACHER || mode === Mode.STUDENT) && (
                    <div className="mt-8 p-6 bg-blue-900/10 border-l-4 border-hogwarts-gold text-left max-w-2xl relative overflow-hidden">
                      <div className="absolute top-0 right-0 p-2 opacity-10"><Scroll size={40}/></div>
-                     <p className="text-blue-900 font-body text-xl italic">
+                     <p className="text-blue-900 font-body text-lg md:text-xl italic">
                        <span className="font-harry font-bold not-italic mr-2 text-hogwarts-navy">Tip:</span> 
                        {currentSlide.insight}
                      </p>
                    </div>
                  )}
 
-                 {/* Practice Mode Recording Visual */}
                  {mode === Mode.PRACTICE && (
                    <div className="mt-10 flex flex-col items-center gap-6 w-full max-w-2xl">
                      <button 
                        onClick={handleRecordToggle}
                        disabled={isAnalyzing}
-                       className={`w-24 h-24 rounded-full flex items-center justify-center hover:scale-105 transition-all shadow-magical border-4 border-hogwarts-gold ${
+                       onMouseEnter={() => playSound('hover')}
+                       className={`w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center hover:scale-105 transition-all shadow-magical border-4 border-hogwarts-gold ${
                          isRecording 
                            ? 'bg-hogwarts-navy animate-pulse' 
                            : isAnalyzing 
@@ -361,7 +393,6 @@ const App: React.FC = () => {
                        {isRecording ? 'Recording Spell...' : isAnalyzing ? 'Consulting The Oracle...' : 'Tap to Cast Voice'}
                      </span>
 
-                     {/* Analysis Feedback Area */}
                      {feedback && (
                         <motion.div 
                           initial={{ opacity: 0, y: 20 }}
@@ -381,12 +412,11 @@ const App: React.FC = () => {
                    </div>
                  )}
 
-                 {/* Bonus Vocab List Rendering */}
                  {currentSlide.type === SlideType.VOCAB && currentSlide.options && (
                    <div className="mt-8 w-full max-w-3xl text-left grid grid-cols-1 gap-3">
                       {currentSlide.options.map((opt) => (
-                        <div key={opt.id} className="p-4 bg-hogwarts-parchmentDark/30 rounded border border-hogwarts-wood/20 hover:border-hogwarts-gold transition-colors font-body text-xl shadow-sm flex items-center gap-3">
-                           <div className="w-2 h-2 rounded-full bg-hogwarts-gold"></div>
+                        <div key={opt.id} className="p-4 bg-hogwarts-parchmentDark/30 rounded border border-hogwarts-wood/20 hover:border-hogwarts-gold transition-colors font-body text-xl shadow-sm flex items-center gap-3 group hover:pl-6 transition-all duration-300">
+                           <div className="w-2 h-2 rounded-full bg-hogwarts-gold group-hover:scale-150 transition-transform"></div>
                            {opt.text}
                         </div>
                       ))}
@@ -403,50 +433,54 @@ const App: React.FC = () => {
 
   // Main Render
   return (
-    <div className={`min-h-screen w-full flex flex-col transition-colors duration-1000 bg-hogwarts-navy`}>
-      <MagicalBackground />
+    <div className={`min-h-screen w-full flex flex-col transition-colors duration-1000 bg-hogwarts-lightBg dark:bg-hogwarts-navy text-hogwarts-ink dark:text-hogwarts-parchment`}>
+      <MagicalBackground isDarkMode={isDarkMode} />
       
       {/* Header - Gothic Stone Style */}
-      <header className="relative z-20 flex items-center justify-between px-6 py-4 bg-hogwarts-navy/80 border-b-4 border-hogwarts-wood shadow-lg backdrop-blur-sm">
+      <header className="relative z-20 flex flex-wrap items-center justify-between px-4 md:px-6 py-4 bg-white/80 dark:bg-hogwarts-navy/80 border-b-4 border-hogwarts-wood shadow-lg backdrop-blur-sm transition-colors duration-500">
         <div className="flex items-center gap-4">
-           <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-hogwarts-gold to-hogwarts-goldDim flex items-center justify-center shadow-glow-gold border-2 border-hogwarts-parchment">
-             <span className="text-hogwarts-navy font-black font-harry text-2xl">H</span>
+           <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gradient-to-br from-hogwarts-gold to-hogwarts-goldDim flex items-center justify-center shadow-glow-gold border-2 border-hogwarts-parchment transform rotate-45 overflow-hidden">
+             <span className="text-hogwarts-navy font-black font-harry text-xl md:text-2xl -rotate-45">H</span>
            </div>
            <div>
-             <h1 className="text-hogwarts-parchment font-harry text-xl md:text-2xl hidden md:block tracking-wider text-glow">IELTS Mastery</h1>
-             <span className="text-xs text-hogwarts-gold font-harry tracking-widest">{mode} MODE</span>
+             <h1 className="text-hogwarts-ink dark:text-hogwarts-parchment font-harry text-lg md:text-2xl hidden md:block tracking-wider text-glow-ink dark:text-glow transition-colors">IELTS Mastery</h1>
+             <span className="text-xs text-hogwarts-crimson dark:text-hogwarts-gold font-harry tracking-widest flex items-center gap-2">
+                <Diamond size={8} fill="currentColor"/> {mode} MODE
+             </span>
            </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
            {mode === Mode.KAHOOT && (
-             <div className="bg-hogwarts-crimson px-6 py-2 rounded-lg border-2 border-hogwarts-gold shadow-lg">
-                <span className="text-white font-harry font-bold text-lg">Score: {score}</span>
+             <div className="bg-hogwarts-crimson px-4 py-1 md:px-6 md:py-2 rounded-lg border-2 border-hogwarts-gold shadow-lg">
+                <span className="text-white font-harry font-bold text-sm md:text-lg">Score: {score}</span>
              </div>
            )}
 
-           <button onClick={toggleMode} className="p-3 rounded-full hover:bg-white/10 transition-colors text-hogwarts-parchment hover:text-hogwarts-gold" title="Switch Mode">
-             {mode === Mode.STUDENT && <GraduationCap size={24} />}
-             {mode === Mode.TEACHER && <Presentation size={24} />}
-             {mode === Mode.KAHOOT && <Gamepad2 size={24} />}
-             {mode === Mode.PRACTICE && <Mic size={24} />}
-           </button>
-           
-           <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-3 rounded-full hover:bg-white/10 transition-colors text-hogwarts-parchment hover:text-hogwarts-gold">
-             {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
-           </button>
+           <div className="flex bg-hogwarts-wood/20 rounded-full p-1 border border-hogwarts-wood/30 backdrop-blur-sm">
+             <button onClick={toggleMode} onMouseEnter={() => playSound('hover')} className="p-2 md:p-3 rounded-full hover:bg-hogwarts-gold/20 transition-colors text-hogwarts-ink dark:text-hogwarts-parchment hover:text-hogwarts-crimson dark:hover:text-hogwarts-gold" title="Switch Mode">
+               {mode === Mode.STUDENT && <GraduationCap size={20} />}
+               {mode === Mode.TEACHER && <Presentation size={20} />}
+               {mode === Mode.KAHOOT && <Gamepad2 size={20} />}
+               {mode === Mode.PRACTICE && <Mic size={20} />}
+             </button>
+             
+             <button onClick={() => setIsDarkMode(!isDarkMode)} onMouseEnter={() => playSound('hover')} className="p-2 md:p-3 rounded-full hover:bg-hogwarts-gold/20 transition-colors text-hogwarts-ink dark:text-hogwarts-parchment hover:text-hogwarts-crimson dark:hover:text-hogwarts-gold">
+               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+             </button>
+           </div>
         </div>
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 relative flex flex-col p-4 md:p-8 z-10 overflow-hidden">
+      <main className="flex-1 relative flex flex-col p-2 md:p-8 z-10 overflow-hidden">
         <AnimatePresence mode='wait'>
           <motion.div 
             key={currentSlideIndex}
-            initial={{ opacity: 0, scale: 0.9, rotateY: -10 }}
-            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
-            transition={{ duration: 0.6, type: "spring", bounce: 0.3 }}
+            initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
             className="flex-1 flex flex-col justify-center w-full h-full perspective-1000"
           >
              {renderSlideContent()}
@@ -455,42 +489,50 @@ const App: React.FC = () => {
       </main>
 
       {/* Footer / Controls - Wooden Plank Style */}
-      <footer className="relative z-20 px-6 py-4 bg-hogwarts-wood border-t-4 border-hogwarts-gold/50 shadow-[0_-5px_20px_rgba(0,0,0,0.5)] flex items-center justify-between text-hogwarts-parchment">
-        <div className="flex items-center gap-4 font-harry text-sm tracking-widest opacity-80">
+      <footer className="relative z-20 px-4 md:px-6 py-4 bg-hogwarts-wood border-t-4 border-hogwarts-gold/50 shadow-[0_-5px_20px_rgba(0,0,0,0.5)] flex flex-col md:flex-row items-center justify-between text-hogwarts-parchment gap-4">
+        
+        {/* Progress Bar Area */}
+        <div className="flex items-center gap-4 font-harry text-xs md:text-sm tracking-widest opacity-80 w-full md:w-auto justify-center md:justify-start">
            <span>SLIDE {currentSlideIndex + 1} / {SLIDES.length}</span>
-           <div className="w-24 md:w-48 h-2 bg-black/40 rounded-full overflow-hidden border border-white/10">
+           <div className="w-full md:w-48 h-2 bg-black/40 rounded-full overflow-hidden border border-white/10">
              <div 
-               className="h-full bg-hogwarts-gold shadow-[0_0_10px_#ffc500]"
+               className="h-full bg-hogwarts-gold shadow-[0_0_10px_#ffc500] transition-all duration-1000 ease-out"
                style={{ width: `${((currentSlideIndex + 1) / SLIDES.length) * 100}%` }}
              ></div>
            </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        {/* Control Buttons */}
+        <div className="flex items-center gap-3 w-full md:w-auto justify-center">
           <button 
             onClick={resetProgress}
-            className="p-3 rounded-lg hover:bg-white/10 text-hogwarts-parchment/60 hover:text-hogwarts-gold transition-all"
+            onMouseEnter={() => playSound('hover')}
+            className="p-3 rounded-sm border border-transparent hover:border-hogwarts-gold/50 hover:bg-white/5 text-hogwarts-parchment/60 hover:text-hogwarts-gold transition-all transform hover:rotate-180 duration-500"
             title="Reset Lesson"
           >
-            <RefreshCw size={20} />
+            <RefreshCw size={18} />
           </button>
           
           <button 
             onClick={prevSlide}
+            onMouseEnter={() => playSound('hover')}
             disabled={currentSlideIndex === 0}
-            className="flex items-center gap-2 px-6 py-3 rounded-lg bg-hogwarts-navy/50 border border-hogwarts-parchment/20 hover:border-hogwarts-gold hover:bg-hogwarts-navy disabled:opacity-30 disabled:cursor-not-allowed transition-all font-harry tracking-wide"
+            className="group flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-sm bg-hogwarts-navy/50 border border-hogwarts-parchment/20 hover:border-hogwarts-gold hover:bg-hogwarts-navy disabled:opacity-30 disabled:cursor-not-allowed transition-all font-harry tracking-wide relative overflow-hidden"
           >
-            <ChevronLeft size={20} />
+            <div className="absolute inset-0 bg-hogwarts-gold/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500"></div>
+            <ChevronLeft size={18} />
             <span className="hidden md:inline">Prev</span>
           </button>
 
           <button 
             onClick={nextSlide}
+            onMouseEnter={() => playSound('hover')}
             disabled={currentSlideIndex === SLIDES.length - 1}
-            className="flex items-center gap-2 px-8 py-3 rounded-lg bg-gradient-to-r from-hogwarts-gold to-hogwarts-goldDim text-hogwarts-navy font-black hover:scale-105 shadow-glow-gold disabled:opacity-30 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed transition-all font-harry tracking-widest border border-yellow-200"
+            className="group flex items-center gap-2 px-6 md:px-8 py-2 md:py-3 rounded-sm bg-gradient-to-r from-hogwarts-gold to-hogwarts-goldDim text-hogwarts-navy font-black hover:scale-105 shadow-glow-gold disabled:opacity-30 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed transition-all font-harry tracking-widest border border-yellow-200 relative overflow-hidden"
           >
+            <div className="absolute inset-0 bg-white/40 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500"></div>
             <span className="hidden md:inline">Next</span>
-            <ChevronRight size={20} />
+            <ChevronRight size={18} />
           </button>
         </div>
       </footer>
