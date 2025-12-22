@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { TimelineData } from '../types';
@@ -35,17 +36,56 @@ const GrammarTimeline: React.FC<GrammarTimelineProps> = ({ data }) => {
         />
 
         {/* Markers (Past, Now, Future) */}
-        {data.markers.map((marker, idx) => (
-            <div 
-                key={idx} 
-                className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4"
-                style={{ left: `${marker.position}%` }}
-            >
-                <div className="w-4 h-4 rounded-full bg-hogwarts-parchment border-2 border-hogwarts-crimson dark:border-hogwarts-gold shadow-md z-10 transition-colors"></div>
-                <span className="font-harry text-hogwarts-ink/70 dark:text-hogwarts-parchment/70 text-sm tracking-widest uppercase mt-4 font-bold">{marker.label}</span>
-                <div className="h-32 w-px bg-hogwarts-ink/10 dark:bg-hogwarts-parchment/20 absolute -top-16 -z-10 border-dashed border-l"></div>
-            </div>
-        ))}
+        {data.markers.map((marker, idx) => {
+            // Determine marker type based on label or position for styling
+            const isNow = marker.label.toUpperCase().includes('NOW');
+            const isFuture = marker.position > 85 || marker.label.toUpperCase().includes('FUTURE');
+            const isPast = !isNow && !isFuture;
+
+            return (
+                <div 
+                    key={idx} 
+                    className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 group"
+                    style={{ left: `${marker.position}%` }}
+                >
+                    {/* Halo effect for 'NOW' or active markers */}
+                    {isNow && (
+                       <motion.div
+                         className="absolute w-12 h-12 rounded-full bg-hogwarts-crimson/20 dark:bg-hogwarts-gold/20 blur-md -z-10 top-[-10px]"
+                         animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0.6, 0.3] }}
+                         transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                       />
+                    )}
+
+                    {/* The Marker Dot */}
+                    <motion.div 
+                        className={`w-5 h-5 rounded-full border-2 z-10 transition-colors duration-300 flex items-center justify-center shadow-lg
+                            ${isNow ? 'bg-hogwarts-gold border-hogwarts-crimson dark:border-hogwarts-parchment shadow-[0_0_15px_rgba(255,197,0,0.6)]' : ''}
+                            ${isPast ? 'bg-stone-300 dark:bg-stone-700 border-stone-500 dark:border-stone-500 opacity-80' : ''}
+                            ${isFuture ? 'bg-blue-100 dark:bg-blue-900 border-blue-400 dark:border-blue-400 opacity-80' : ''}
+                        `}
+                        animate={isNow ? { scale: [1, 1.1, 1] } : {}}
+                        transition={{ duration: 2, repeat: Infinity }}
+                    >
+                        {isNow && <div className="w-1.5 h-1.5 bg-hogwarts-crimson dark:bg-hogwarts-navy rounded-full" />}
+                    </motion.div>
+
+                    {/* Label */}
+                    <span className={`font-harry text-sm tracking-widest uppercase mt-4 font-bold transition-all duration-300
+                        ${isNow ? 'text-hogwarts-crimson dark:text-hogwarts-gold scale-110 text-glow-ink dark:text-glow' : ''}
+                        ${isPast ? 'text-stone-500 dark:text-stone-400' : ''}
+                        ${isFuture ? 'text-blue-600 dark:text-blue-300' : ''}
+                    `}>
+                        {marker.label}
+                    </span>
+
+                    {/* Vertical Dashed Line */}
+                    <div className={`h-32 w-px absolute -top-16 -z-10 border-dashed border-l transition-colors duration-300
+                        ${isNow ? 'border-hogwarts-crimson/40 dark:border-hogwarts-gold/40' : 'border-hogwarts-ink/10 dark:border-hogwarts-parchment/10'}
+                    `}></div>
+                </div>
+            );
+        })}
 
         {/* Events Rendering */}
         {data.events.map((event, idx) => {
