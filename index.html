@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="transition-all duration-300">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Hogwarts IELTS Mastery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Pinyon+Script&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -70,12 +70,20 @@
     </script>
     <style>
       /* Global Reset & Base */
+      html {
+        /* Base font size transition for the "Algorithm" */
+        transition: font-size 0.3s ease-out;
+        scroll-behavior: smooth;
+      }
+
       body {
         font-family: 'Crimson Text', serif;
         overflow: hidden; 
         transition: background-color 1s ease, color 1s ease;
         /* Magical Cursor - Simple SVG fallback */
         cursor: crosshair;
+        /* Prevent bounce on iOS */
+        overscroll-behavior: none;
       }
       
       ::selection {
@@ -98,17 +106,18 @@
       }
 
       /* Custom Scrollbar */
-      ::-webkit-scrollbar {
+      .custom-scrollbar::-webkit-scrollbar {
         width: 8px;
+        height: 8px;
       }
-      ::-webkit-scrollbar-track {
+      .custom-scrollbar::-webkit-scrollbar-track {
         background: rgba(0,0,0,0.1); 
       }
-      ::-webkit-scrollbar-thumb {
+      .custom-scrollbar::-webkit-scrollbar-thumb {
         background: #8b4513; 
         border-radius: 4px;
       }
-      ::-webkit-scrollbar-thumb:hover {
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #5d2e0c; 
       }
     </style>

@@ -13,8 +13,22 @@ const MagicalBackground: React.FC<MagicalBackgroundProps> = ({ isDarkMode }) => 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let w = canvas.width = window.innerWidth;
-    let h = canvas.height = window.innerHeight;
+    // "Ultra Precise" resizing algorithm for canvas
+    const handleResize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      
+      // Set actual size in memory (scaled to account for extra pixel density)
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+
+      // Normalize coordinate system to use css pixels
+      ctx.scale(dpr, dpr);
+      
+      // Initialize/Re-initialize particles logic here to match new dimensions
+      initParticles(w, h);
+    };
 
     // Type definition for particles
     type Particle = {
@@ -30,7 +44,7 @@ const MagicalBackground: React.FC<MagicalBackgroundProps> = ({ isDarkMode }) => 
     const particles: Particle[] = [];
     const particleCount = 150;
 
-    const initParticles = () => {
+    const initParticles = (w: number, h: number) => {
         particles.length = 0;
         for (let i = 0; i < particleCount; i++) {
             particles.push({
@@ -47,16 +61,18 @@ const MagicalBackground: React.FC<MagicalBackgroundProps> = ({ isDarkMode }) => 
         }
     };
 
-    initParticles();
-
     let animationFrameId: number;
 
     const draw = () => {
+      // Dimensions for drawing logic (CSS pixels)
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
       // Clear canvas
       ctx.clearRect(0, 0, w, h);
 
       // Background Gradient
-      const gradient = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, w);
+      const gradient = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w, h));
       if (isDarkMode) {
           // Night Mode: Deep Blue/Black
           gradient.addColorStop(0, '#1a1f35');
@@ -123,24 +139,18 @@ const MagicalBackground: React.FC<MagicalBackgroundProps> = ({ isDarkMode }) => 
       animationFrameId = requestAnimationFrame(draw);
     };
 
+    // Initial setup
+    handleResize();
     draw();
 
-    const handleResize = () => {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-      initParticles();
-    };
-
+    // Event Listener
     window.addEventListener('resize', handleResize);
     
-    // Re-init particles when mode changes
-    initParticles();
-
     return () => {
         window.removeEventListener('resize', handleResize);
         cancelAnimationFrame(animationFrameId);
     };
-  }, [isDarkMode]); // Re-run effect when isDarkMode changes
+  }, [isDarkMode]); 
 
   return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none transition-opacity duration-1000" />;
 };
