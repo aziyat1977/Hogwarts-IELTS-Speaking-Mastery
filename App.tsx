@@ -26,20 +26,25 @@ import {
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
-// Refined Parchment Container with compact padding for "fit-to-screen"
+// Refined Parchment Container with internal scrolling for safety
 const ParchmentContainer = ({ children, className = "" }: { children?: React.ReactNode, className?: string }) => (
   <div className={`relative w-full max-w-5xl mx-auto p-4 md:p-6 lg:p-8 
     bg-hogwarts-parchment text-hogwarts-ink 
     shadow-[0_0_50px_rgba(0,0,0,0.2)] dark:shadow-[0_0_50px_rgba(0,0,0,0.8)]
     border-[4px] md:border-[8px] border-double border-hogwarts-wood 
-    rounded-sm bg-parchment-pattern shadow-inner-parchment transition-all duration-500 flex flex-col justify-center ${className}`}>
-    <div className="absolute top-0 left-0 w-full h-full pointer-events-none border border-hogwarts-gold/30 rounded-sm m-1"></div>
-    {children}
+    rounded-sm bg-parchment-pattern shadow-inner-parchment transition-all duration-500 flex flex-col justify-center 
+    max-h-full overflow-hidden ${className}`}>
+    <div className="absolute top-0 left-0 w-full h-full pointer-events-none border border-hogwarts-gold/30 rounded-sm m-1 z-0"></div>
+    {/* Content Wrapper for safe internal scrolling if text is too large */}
+    <div className="relative z-10 w-full max-h-full overflow-y-auto custom-scrollbar flex flex-col items-center">
+      {children}
+    </div>
+    
     {/* Decorative corner flourishes - scaled down */}
-    <div className="absolute top-1 left-1 text-hogwarts-wood/40 dark:text-hogwarts-gold/40"><Sparkles size={12} /></div>
-    <div className="absolute top-1 right-1 text-hogwarts-wood/40 dark:text-hogwarts-gold/40"><Sparkles size={12} /></div>
-    <div className="absolute bottom-1 left-1 text-hogwarts-wood/40 dark:text-hogwarts-gold/40"><Sparkles size={12} /></div>
-    <div className="absolute bottom-1 right-1 text-hogwarts-wood/40 dark:text-hogwarts-gold/40"><Sparkles size={12} /></div>
+    <div className="absolute top-1 left-1 text-hogwarts-wood/40 dark:text-hogwarts-gold/40 z-0"><Sparkles size={12} /></div>
+    <div className="absolute top-1 right-1 text-hogwarts-wood/40 dark:text-hogwarts-gold/40 z-0"><Sparkles size={12} /></div>
+    <div className="absolute bottom-1 left-1 text-hogwarts-wood/40 dark:text-hogwarts-gold/40 z-0"><Sparkles size={12} /></div>
+    <div className="absolute bottom-1 right-1 text-hogwarts-wood/40 dark:text-hogwarts-gold/40 z-0"><Sparkles size={12} /></div>
   </div>
 );
 
@@ -118,33 +123,50 @@ const App: React.FC = () => {
     localStorage.setItem('hogwarts_ielts_dark_mode', JSON.stringify(isDarkMode));
   }, [isDarkMode]);
 
-  // --- THE ULTRA PRECISE FIT-TO-SCREEN ALGORITHM ---
+  // --- REFINED ULTRA PRECISE FIT-TO-SCREEN ALGORITHM ---
   useEffect(() => {
     const optimizeView = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
       
-      // Constraint Logic:
-      // We want the entire UI (Header + Main + Footer) to fit in 'h'.
-      // Header ~ 3rem, Footer ~ 3rem. Main ~ 40rem content?
-      // Let's assume a "design height" of around 45rem units covers everything comfortably.
-      // If we set 1rem = h / 45, everything naturally scales to fit height.
-      // We also check width to ensure horizontal content doesn't overflow.
+      const aspectRatio = w / h;
+      const isPortrait = aspectRatio < 1;
       
-      const heightBasedSize = h / 48; // Divisor adjusts "zoom level". Higher = smaller UI.
-      const widthBasedSize = w / 64;  // Ensure width fits too.
+      // Determine target layout grid size (in 'rem' units)
+      // These values represent the ideal "virtual canvas size" the content was designed for.
       
-      // Use the limiting dimension to ensure NO SCROLLING.
-      let newFontSize = Math.min(heightBasedSize, widthBasedSize);
+      let targetRemWidth = 0;
+      let targetRemHeight = 0;
+
+      if (isPortrait) {
+        // Portrait Mode (Mobile):
+        // Content stacks vertically. We need width to fit ~25 chars comfortably.
+        // Height needs to accommodate stacked elements: Header + Title + Content + Footer.
+        targetRemWidth = 24;  // Slightly wider to ensure text doesn't wrap too early
+        targetRemHeight = 60; // Taller canvas assumption for stacking
+      } else {
+        // Landscape Mode (Desktop/Tablet):
+        // Content often sits side-by-side or has wide margins.
+        targetRemWidth = 60;  // Standard desktop width assumption
+        targetRemHeight = 45; // Standard desktop height assumption
+      }
+
+      // Calculate the font size that would make the window fit our target rem dimensions
+      const fontSizeH = h / targetRemHeight;
+      const fontSizeW = w / targetRemWidth;
+
+      // Choose the limiting dimension to ensure we never overflow the viewport
+      let newFontSize = Math.min(fontSizeH, fontSizeW);
       
-      // Soft Clamps
-      // Don't let it get microscopic on mobile (better to crop slightly than be unreadable? 
-      // User said "see all page", so we prioritize fit, but min 9px is usually absolute floor for readability).
-      newFontSize = Math.max(9, Math.min(newFontSize, 32));
+      // Clamping Logic:
+      // Min 10px: Ensures readability on very small or high-density screens (iPhone SE).
+      // Max 26px: Prevents interface from becoming cartoonishly large on 4K screens.
+      newFontSize = Math.max(10, Math.min(newFontSize, 26));
 
       const root = document.documentElement;
       root.style.fontSize = `${newFontSize}px`;
       
+      // Handle Safe Areas for notched devices
       const safeTop = getComputedStyle(document.documentElement).getPropertyValue("--sat");
       if (!safeTop) root.style.setProperty("--sat", "env(safe-area-inset-top)");
     };
@@ -152,7 +174,7 @@ const App: React.FC = () => {
     let timeoutId: ReturnType<typeof setTimeout>;
     const handleResize = () => {
         clearTimeout(timeoutId);
-        timeoutId = setTimeout(optimizeView, 10);
+        timeoutId = setTimeout(optimizeView, 50); // Slight debounce
     };
 
     window.addEventListener('resize', handleResize);
@@ -391,60 +413,62 @@ const App: React.FC = () => {
       case SlideType.QUIZ:
         return (
           <div className="flex flex-col h-full justify-center w-full px-2">
-             <div className="max-w-4xl mx-auto w-full relative z-10">
+             <div className="max-w-4xl mx-auto w-full relative z-10 h-full flex flex-col justify-center">
                 <ParchmentContainer>
-                  <div className="flex items-center justify-between mb-2 md:mb-4 border-b-2 border-hogwarts-ink/20 pb-2">
-                     <h2 className="text-lg md:text-2xl font-harry text-hogwarts-wood flex items-center gap-2">
-                       <Feather className="text-hogwarts-crimson w-5 h-5 md:w-6 md:h-6" />
-                       {currentSlide.title}
-                     </h2>
-                     {isKahoot && <div className="text-hogwarts-crimson font-bold text-lg md:text-2xl font-harry animate-pulse">00:30</div>}
-                  </div>
-                  
-                  <p className="text-lg md:text-2xl mb-4 md:mb-8 leading-relaxed font-body font-semibold">{currentSlide.content}</p>
-                  
-                  <div className={`grid ${currentSlide.options && currentSlide.options.length > 2 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-2 md:gap-4`}>
-                    {currentSlide.options?.map((opt, idx) => {
-                      let btnClass = "relative p-3 md:p-4 rounded-sm border-2 text-left text-base md:text-lg font-body transition-all duration-300 transform group ";
-                      
-                      if (isKahoot) {
-                         const colors = ['bg-red-700 border-red-900', 'bg-blue-700 border-blue-900', 'bg-yellow-600 border-yellow-800', 'bg-green-700 border-green-900'];
-                         btnClass += `${colors[idx % 4]} text-white`;
-                      } else {
-                         // Hogwarts Legacy Style Button
-                         btnClass += "bg-white/40 border-hogwarts-wood/40 hover:bg-white/60 hover:border-hogwarts-gold text-hogwarts-ink hover:scale-[1.02] hover:shadow-glow-gold";
-                      }
-
-                      if (revealed) {
-                        if (opt.isCorrect) btnClass = "bg-hogwarts-emerald border-hogwarts-emerald text-white ring-4 ring-hogwarts-gold/50";
-                        else if (answered === opt.id) btnClass = "bg-hogwarts-crimson border-hogwarts-crimson text-white opacity-90";
-                        else btnClass += " opacity-40 grayscale";
-                      }
-
-                      return (
-                        <button 
-                          key={opt.id}
-                          onClick={() => handleOptionClick(opt.id, opt.isCorrect)}
-                          onMouseEnter={() => playSound('hover')}
-                          className={btnClass}
-                          disabled={!!answered && !isTeacher}
-                        >
-                          <div className="flex items-center">
-                            <span className={`w-6 h-6 md:w-8 md:h-8 shrink-0 rotate-45 group-hover:rotate-0 transition-transform duration-300 flex items-center justify-center mr-3 border-2 ${isKahoot ? 'border-white/50 bg-black/20' : 'border-hogwarts-wood/50 bg-hogwarts-parchment text-hogwarts-wood'} font-harry font-bold text-xs md:text-sm`}>
-                              <span className="group-hover:rotate-0 -rotate-45 transition-transform duration-300">{opt.id}</span>
-                            </span>
-                            <span className="font-semibold">{opt.text}</span>
-                          </div>
-                          {/* Corner details for UI feel */}
-                          <div className="absolute top-1 left-1 w-1 h-1 bg-current opacity-30"></div>
-                          <div className="absolute bottom-1 right-1 w-1 h-1 bg-current opacity-30"></div>
-                          
-                          {revealed && opt.isCorrect && (
-                            <Sparkles className="absolute -top-2 -right-2 text-hogwarts-gold animate-sparkle w-6 h-6 fill-current" />
-                          )}
-                        </button>
-                      )
-                    })}
+                  <div className="w-full">
+                    <div className="flex items-center justify-between mb-2 md:mb-4 border-b-2 border-hogwarts-ink/20 pb-2">
+                       <h2 className="text-lg md:text-2xl font-harry text-hogwarts-wood flex items-center gap-2">
+                         <Feather className="text-hogwarts-crimson w-5 h-5 md:w-6 md:h-6" />
+                         {currentSlide.title}
+                       </h2>
+                       {isKahoot && <div className="text-hogwarts-crimson font-bold text-lg md:text-2xl font-harry animate-pulse">00:30</div>}
+                    </div>
+                    
+                    <p className="text-lg md:text-2xl mb-4 md:mb-8 leading-relaxed font-body font-semibold">{currentSlide.content}</p>
+                    
+                    <div className={`grid ${currentSlide.options && currentSlide.options.length > 2 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-2 md:gap-4 w-full`}>
+                      {currentSlide.options?.map((opt, idx) => {
+                        let btnClass = "relative p-3 md:p-4 rounded-sm border-2 text-left text-base md:text-lg font-body transition-all duration-300 transform group w-full ";
+                        
+                        if (isKahoot) {
+                           const colors = ['bg-red-700 border-red-900', 'bg-blue-700 border-blue-900', 'bg-yellow-600 border-yellow-800', 'bg-green-700 border-green-900'];
+                           btnClass += `${colors[idx % 4]} text-white`;
+                        } else {
+                           // Hogwarts Legacy Style Button
+                           btnClass += "bg-white/40 border-hogwarts-wood/40 hover:bg-white/60 hover:border-hogwarts-gold text-hogwarts-ink hover:scale-[1.02] hover:shadow-glow-gold";
+                        }
+  
+                        if (revealed) {
+                          if (opt.isCorrect) btnClass = "bg-hogwarts-emerald border-hogwarts-emerald text-white ring-4 ring-hogwarts-gold/50";
+                          else if (answered === opt.id) btnClass = "bg-hogwarts-crimson border-hogwarts-crimson text-white opacity-90";
+                          else btnClass += " opacity-40 grayscale";
+                        }
+  
+                        return (
+                          <button 
+                            key={opt.id}
+                            onClick={() => handleOptionClick(opt.id, opt.isCorrect)}
+                            onMouseEnter={() => playSound('hover')}
+                            className={btnClass}
+                            disabled={!!answered && !isTeacher}
+                          >
+                            <div className="flex items-center w-full">
+                              <span className={`w-6 h-6 md:w-8 md:h-8 shrink-0 rotate-45 group-hover:rotate-0 transition-transform duration-300 flex items-center justify-center mr-3 border-2 ${isKahoot ? 'border-white/50 bg-black/20' : 'border-hogwarts-wood/50 bg-hogwarts-parchment text-hogwarts-wood'} font-harry font-bold text-xs md:text-sm`}>
+                                <span className="group-hover:rotate-0 -rotate-45 transition-transform duration-300">{opt.id}</span>
+                              </span>
+                              <span className="font-semibold">{opt.text}</span>
+                            </div>
+                            {/* Corner details for UI feel */}
+                            <div className="absolute top-1 left-1 w-1 h-1 bg-current opacity-30"></div>
+                            <div className="absolute bottom-1 right-1 w-1 h-1 bg-current opacity-30"></div>
+                            
+                            {revealed && opt.isCorrect && (
+                              <Sparkles className="absolute -top-2 -right-2 text-hogwarts-gold animate-sparkle w-6 h-6 fill-current" />
+                            )}
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
                 </ParchmentContainer>
              </div>
@@ -460,13 +484,13 @@ const App: React.FC = () => {
         const isSpeakingPractice = currentSlide.type === SlideType.SPEAKING_PRACTICE;
         return (
           <div className="flex flex-col h-full justify-center items-center text-center w-full px-2">
-             <ParchmentContainer className="flex flex-col items-center">
+             <ParchmentContainer className="flex flex-col items-center justify-center">
                  <div className="mb-2 md:mb-4 p-2 md:p-3 rounded-full border-4 border-hogwarts-gold/50 bg-hogwarts-navy shadow-lg relative shrink-0">
                     <div className="absolute inset-0 bg-hogwarts-gold opacity-10 rounded-full animate-pulse-slow"></div>
                     {IconComponent && <IconComponent className="text-hogwarts-gold w-6 h-6 md:w-10 md:h-10" />}
                  </div>
                  
-                 <h2 className="text-[10px] md:text-sm font-harry uppercase tracking-[0.2em] text-hogwarts-crimson mb-2 border-b border-hogwarts-crimson/30 pb-1">
+                 <h2 className="text-[10px] md:text-sm font-harry uppercase tracking-[0.2em] text-hogwarts-crimson mb-2 border-b border-hogwarts-crimson/30 pb-1 shrink-0">
                    {currentSlide.type === SlideType.REASON ? "Pauline's Insight" : currentSlide.title || currentSlide.type.replace('_', ' ')}
                  </h2>
 
@@ -492,7 +516,7 @@ const App: React.FC = () => {
                  )}
 
                  {currentSlide.insight && (mode === Mode.TEACHER || mode === Mode.STUDENT || isSpeakingPractice) && (
-                   <div className="mt-4 md:mt-6 p-3 md:p-4 bg-blue-900/10 border-l-4 border-hogwarts-gold text-left max-w-xl relative overflow-hidden">
+                   <div className="mt-4 md:mt-6 p-3 md:p-4 bg-blue-900/10 border-l-4 border-hogwarts-gold text-left max-w-xl relative overflow-hidden shrink-0">
                      <div className="absolute top-0 right-0 p-1 opacity-10"><Scroll size={30}/></div>
                      <p className="text-blue-900 font-body text-sm md:text-lg italic leading-snug">
                        <span className="font-harry font-bold not-italic mr-1 text-hogwarts-navy">Tip:</span> 
@@ -502,7 +526,7 @@ const App: React.FC = () => {
                  )}
 
                  {(mode === Mode.PRACTICE || isSpeakingPractice) && (
-                   <div className="mt-4 md:mt-6 flex flex-col items-center gap-2 w-full max-w-xl">
+                   <div className="mt-4 md:mt-6 flex flex-col items-center gap-2 w-full max-w-xl shrink-0">
                      <button 
                        onClick={handleRecordToggle}
                        disabled={isAnalyzing}
@@ -534,20 +558,16 @@ const App: React.FC = () => {
                           animate={{ opacity: 1, y: 0 }}
                           className="w-full bg-hogwarts-parchmentDark/40 p-3 md:p-4 rounded-lg border-2 border-hogwarts-gold/30 text-left relative overflow-hidden group max-h-[25vh] overflow-y-auto custom-scrollbar"
                         >
-                           {/* Custom Logic to Parse and Display Score if Present */}
                            {(() => {
-                             // Attempt to extract Score (Pronunciation OR Speaking)
-                             // Matches: "Pronunciation Score: X/10" OR "Speaking Score: X/10"
                              const scoreMatch = feedback.match(/(?:Pronunciation|Speaking)\s*Score:\s*(\d+(?:\.\d+)?)\/10/i);
                              const scoreVal = scoreMatch ? parseFloat(scoreMatch[1]) : null;
                              const scoreLabel = scoreMatch ? (scoreMatch[0].includes('Speaking') ? 'Speaking' : 'Pronunciation') : 'Score';
                              
-                             // Remove the score line from the displayed text to avoid duplication
                              const displayText = feedback.replace(/(?:Pronunciation|Speaking)\s*Score:\s*\d+(?:\.\d+)?\/10\s*/i, '').trim();
 
                              return (
                                <>
-                                 <div className="flex items-center justify-between gap-2 mb-2 border-b border-hogwarts-gold/30 pb-1">
+                                 <div className="flex items-center justify-between gap-2 mb-2 border-b border-hogwarts-gold/30 pb-1 sticky top-0 bg-hogwarts-parchmentDark/90 backdrop-blur-sm z-10">
                                     <div className="flex items-center gap-2">
                                         <Wand2 className="text-hogwarts-gold w-4 h-4" />
                                         <h3 className="font-harry text-sm md:text-lg text-hogwarts-wood">Examiner's Verdict</h3>
@@ -570,7 +590,7 @@ const App: React.FC = () => {
                  )}
 
                  {currentSlide.type === SlideType.VOCAB && currentSlide.options && (
-                   <div className="mt-4 md:mt-6 w-full max-w-2xl text-left grid grid-cols-1 gap-2">
+                   <div className="mt-4 md:mt-6 w-full max-w-2xl text-left grid grid-cols-1 gap-2 shrink-0">
                       {currentSlide.options.map((opt) => (
                         <div key={opt.id} className="p-2 md:p-3 bg-hogwarts-parchmentDark/30 rounded border border-hogwarts-wood/20 hover:border-hogwarts-gold transition-colors font-body text-base md:text-lg shadow-sm flex items-center gap-2 group hover:pl-4 transition-all duration-300">
                            <div className="w-1.5 h-1.5 rounded-full bg-hogwarts-gold group-hover:scale-150 transition-transform"></div>
