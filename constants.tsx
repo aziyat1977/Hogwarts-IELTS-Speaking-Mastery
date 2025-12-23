@@ -969,6 +969,32 @@ export const SLIDES: SlideContent[] = [
         { id: '9', text: "Inadvertently (adv): Accidentally/Without intention." },
         { id: '10', text: "Scrutinize (v): To examine closely." },
     ]
+  },
+  // --- DEDICATED SPEAKING PRACTICE ---
+  {
+    id: 300,
+    type: SlideType.PART_HEADER,
+    content: "Speaking Practice Arena",
+    visualDescription: "Duel Silhouette",
+    part: "Practice"
+  },
+  {
+    id: 301,
+    type: SlideType.SPEAKING_PRACTICE,
+    title: "Part 2: Long Turn Practice",
+    content: "Describe a piece of technology you own that you find difficult to use. \n\nYou should say:\n- What it is\n- When you got it\n- Why it is difficult to use\nAnd explain how you handle this difficulty.",
+    insight: "Focus on organizing your ideas coherently. Use linking words like 'Regarding the reason why...', 'Moving on to...', 'Consequently...'.",
+    visualDescription: "Magical Quill",
+    part: "Practice"
+  },
+  {
+    id: 302,
+    type: SlideType.SPEAKING_PRACTICE,
+    title: "Part 3: Deep Dive Discussion",
+    content: "Do you think that in the future, humans will become completely dependent on Artificial Intelligence for decision-making?",
+    insight: "Develop your answer with clear examples. Show contrast (e.g., 'While some argue..., others believe...'). Ensure your argument flows logically.",
+    visualDescription: "Divination Ball",
+    part: "Practice"
   }
 ];
 

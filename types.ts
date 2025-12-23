@@ -15,7 +15,8 @@ export enum SlideType {
   REASON = 'REASON',
   INTRO = 'INTRO',
   PART_HEADER = 'PART_HEADER',
-  TIMELINE = 'TIMELINE'
+  TIMELINE = 'TIMELINE',
+  SPEAKING_PRACTICE = 'SPEAKING_PRACTICE'
 }
 
 export interface QuizOption {
